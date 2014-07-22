@@ -5,7 +5,6 @@ var robots = require('../index')
   , url    = require('url');
 
 
-var EventEmitter = require('events').EventEmitter;
 
 /*
  * This will hold data to respond with such as
@@ -14,65 +13,11 @@ var EventEmitter = require('events').EventEmitter;
 var test_request_data = {};
 
 
-/*
- * Mock request function to use in mock http and https
- *
- * @param {Object} data     The same request object that would
- *                          be sent to the request function
- */
-function mock_request(data) {
-    var request = new EventEmitter();
-    request.end = function() {}
 
-    // Make sure host is what is expected
-    assert.ok(data.hostname in test_request_data,
-            "Got unexpected hostname: " + data.hostname)
-    site_test_data = test_request_data[data.hostname];
+var mockrequest = {};
+mockrequest.request = function() {};
 
-    // Convert the data into url
-    data.pathname = data.path;
-    data.protocol = this.protocol;
-    formatted_url = url.format(data);
-
-    // Make sure url is what is expected for the test
-    assert.ok(formatted_url in site_test_data,
-            "Got unexpected url: " + formatted_url);
-    url_data = site_test_data[formatted_url];
-
-    var response = new EventEmitter();
-    response.setEncoding = function() {};
-    response.resume = function() {};
-
-    ut.extend(response, url_data);
-
-    // Emulate the request I/O with a setTimeout
-    setTimeout(function() {
-        request.emit('response', response);
-        if(response.chunks) {
-            var chunks = response.chunks
-              , i;
-
-            for(i = 0; i < chunks.length - 1; i++) {
-                response.emit('data', chunks[i])
-            }
-            response.emit('end', chunks[chunks.length - 1]);
-        }
-    }, 0);
-    return request;
-};
-
-mock_https = {
-    'request': mock_request,
-    'protocol': 'https',
-};
-mock_http = {
-    'request': mock_request,
-    'protocol': 'http',
-};
-
-robots.https = mock_https;
-robots.http = mock_http;
-
+robots.request = mockrequest.request;
 
 /*
  * Main test function for testing the parser.read method
