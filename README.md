@@ -5,7 +5,7 @@ robots.js — is parser for [robots.txt](www.robotstxt.org) files for node.js.
 
 Differences with original repository:
 -------------------------------------
-  * require('http') replaced with require('request')
+require('http') replaced with require('request')
 
 
 
