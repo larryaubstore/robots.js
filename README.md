@@ -3,13 +3,18 @@ robots.js
 
 robots.js — is parser for [robots.txt](www.robotstxt.org) files for node.js.
 
+Differences with original repository:
+-------------------------------------
+  * require('http') replaced with require('request')
+
+
+
 Installation
 ------------
 
-It's recommended to install via [npm](https://github.com/isaacs/npm/):
 
 ```bash
-$ npm install -g robots
+$ npm install git://github.com/larryaubstore/robots.js.git
 ```
 
 Usage
